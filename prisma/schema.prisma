@@ -20,28 +20,28 @@ model User {
   firstName String
   lastName  String
 
-  // products Product[]
+  products Product[]
   // reviews Review[]
 
   @@map("users")
 }
 
-// model Product {
-//   id Int @id @default(autoincrement())
-//   studentId Int
-//   productName String
-//   description String
-//   startPrice Int
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   available Boolean
-//   address String
+model Product {
+  id Int @id @default(autoincrement())
+  studentId Int
+  productName String
+  description String
+  startPrice Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  available Boolean
+  address String
 
-//   user User @relation(fields: [studentId], references: [studentId])
-//   reviews Review[]
+  user User @relation(fields: [studentId], references: [studentId])
+  // reviews Review[]
 
-//   @@map("products")
-// }
+  @@map("products")
+}
 
 // model Review {
 //   id Int @id @default(autoincrement())
