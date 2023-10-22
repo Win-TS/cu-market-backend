@@ -1,18 +1,20 @@
 import {
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { Product } from '@prisma/client';
+import { Cron } from '@nestjs/schedule';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AddProductDto, EditProductDto } from './dto';
 
 @Injectable()
 export class ProductService {
+  private readonly logger = new Logger(ProductService.name);
   constructor(private prisma: PrismaService) {}
 
   async addProduct(dto: AddProductDto) {
-    console.log(dto);
     const user = await this.prisma.user.findUnique({
       where: { studentId: dto.studentId },
     });
@@ -20,7 +22,6 @@ export class ProductService {
       throw new ForbiddenException(
         `User Not Found, Student ID: ${dto.studentId}`,
       );
-    console.log(user);
     try {
       const product = await this.prisma.product.create({
         data: {
@@ -29,10 +30,10 @@ export class ProductService {
           startPrice: dto.startPrice,
           available: dto.available,
           address: dto.address,
+          expiryLength: dto.expiryLength,
           user: { connect: { studentId: dto.studentId } },
         },
       });
-      console.log(product);
       return product;
     } catch (error) {
       throw new ForbiddenException('Failed to create product');
@@ -47,6 +48,66 @@ export class ProductService {
         },
       });
       return products;
+    } catch (error) {
+      throw new ForbiddenException('Failed to retrieve products');
+    }
+  }
+
+  async getAvailableProducts() {
+    try {
+      const availableProducts = await this.prisma.product.findMany({
+        where: {
+          available: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+      return availableProducts;
+    } catch (error) {
+      throw new ForbiddenException('Failed to retrieve products');
+    }
+  }
+
+  async getExpiredProducts() {
+    try {
+      const expiredProducts = await this.prisma.product.findMany({
+        where: {
+          available: false,
+        },
+        orderBy: {
+          updatedAt: 'desc',
+        },
+      });
+      return expiredProducts;
+    } catch (error) {
+      throw new ForbiddenException('Failed to retrieve products');
+    }
+  }
+
+  async getProductsById(studentId: string) {
+    try {
+      const products = await this.prisma.product.findMany({
+        where: {
+          studentId: studentId,
+        },
+        orderBy: {
+          updatedAt: 'desc',
+        },
+      });
+      return products;
+    } catch (error) {
+      throw new ForbiddenException('Failed to retrieve products');
+    }
+  }
+
+  async getProductDetailsById(id: number) {
+    try {
+      const product = await this.prisma.product.findUnique({
+        where: { id: id },
+      });
+      console.log(product);
+      return product;
     } catch (error) {
       throw new ForbiddenException('Failed to retrieve products');
     }
@@ -85,6 +146,27 @@ export class ProductService {
       return deletedProduct;
     } catch (error) {
       throw new ForbiddenException('Failed to delete product');
+    }
+  }
+
+  @Cron('*/3 * * * *')
+  async updateExpireProduct(): Promise<void> {
+    this.logger.log('Cron Job Execute: Update Availability');
+    const products: Product[] = await this.prisma.product.findMany();
+    for (const product of products) {
+      if (product.expiryLength) {
+        if (product.available) {
+          const currentTime = new Date();
+          const expiryTime = new Date(product.createdAt);
+          expiryTime.setSeconds(expiryTime.getSeconds() + product.expiryLength);
+          if (currentTime > expiryTime) {
+            await this.prisma.product.update({
+              where: { id: product.id },
+              data: { available: false },
+            });
+          }
+        }
+      }
     }
   }
 }

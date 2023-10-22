@@ -27,6 +27,11 @@ export class AddProductDto {
     @IsBoolean()
     @ApiProperty()
     available: boolean;
+
+    @IsOptional()
+    @IsInt()
+    @ApiProperty()
+    expiryLength: number
     
     @IsNotEmpty()
     @IsString()
