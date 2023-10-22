@@ -41,7 +41,11 @@ export class ProductService {
 
   async getAllProduct() {
     try {
-      const products = await this.prisma.product.findMany();
+      const products = await this.prisma.product.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
       return products;
     } catch (error) {
       throw new ForbiddenException('Failed to retrieve products');

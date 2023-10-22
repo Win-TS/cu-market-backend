@@ -4,9 +4,9 @@ import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-valida
 export class AddProductDto {
 
     @IsNotEmpty()
-    @IsInt()
+    @IsString()
     @ApiProperty()
-    studentId: number;
+    studentId: string;
 
     @IsNotEmpty()
     @IsString()
@@ -36,7 +36,7 @@ export class AddProductDto {
 }
 
 export class EditProductDto extends AddProductDto {
-    
+
     @IsNotEmpty()
     @IsInt()
     @ApiProperty()

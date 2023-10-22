@@ -52,7 +52,7 @@ export class AuthService {
 
   async signToken(
     userId: number,
-    studentId: number,
+    studentId: string,
     remember: boolean = false,
   ): Promise<{ access_token: string }> {
     const payload = {

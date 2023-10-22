@@ -16,7 +16,7 @@ model User {
   updatedAt DateTime @updatedAt
   email     String   @unique
   hash      String
-  studentId Int      @unique
+  studentId String   @unique
   firstName String
   lastName  String
 
@@ -27,15 +27,15 @@ model User {
 }
 
 model Product {
-  id Int @id @default(autoincrement())
-  studentId Int
+  id          Int      @id @default(autoincrement())
+  studentId   String
   productName String
   description String
-  startPrice Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  available Boolean
-  address String
+  startPrice  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  available   Boolean
+  address     String
 
   user User @relation(fields: [studentId], references: [studentId])
   // reviews Review[]

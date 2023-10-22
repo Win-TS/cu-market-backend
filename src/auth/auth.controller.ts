@@ -3,7 +3,6 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
-  ParseIntPipe,
   Post,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -48,6 +47,6 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
-  
+
 
 }
