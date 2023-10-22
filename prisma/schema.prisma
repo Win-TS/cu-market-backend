@@ -21,23 +21,27 @@ model User {
   lastName  String
 
   products Product[]
+  boughtProducts Product[] @relation("BuyerRelation")
   // reviews Review[]
 
   @@map("users")
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  studentId   String
-  productName String
-  description String
-  startPrice  Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  available   Boolean
-  address     String
+  id           Int      @id @default(autoincrement())
+  studentId    String
+  productName  String
+  description  String
+  startPrice   Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  available    Boolean
+  expiryLength Int?
+  address      String
+  buyerId      String?
 
   user User @relation(fields: [studentId], references: [studentId])
+  buyer User? @relation("BuyerRelation", fields: [buyerId], references: [studentId])
   // reviews Review[]
 
   @@map("products")
