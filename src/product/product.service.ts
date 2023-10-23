@@ -113,6 +113,52 @@ export class ProductService {
     }
   }
 
+  async getProductsNearExpiry() {
+    try {
+      const products = await this.prisma.product.findMany({
+        where: {
+          available: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+      const productsWithTimeRemaining = products.map((product) => {
+        const currentTime = new Date();
+        const expiryTime = new Date(product.createdAt);
+        expiryTime.setSeconds(expiryTime.getSeconds() + product.expiryLength);
+        const timeRemaining = expiryTime.getTime() - currentTime.getTime();
+        return {
+          ...product,
+          timeRemaining,
+        };
+      });
+
+      const sortedProducts = productsWithTimeRemaining.sort(
+        (a, b) => a.timeRemaining - b.timeRemaining,
+      );
+      return sortedProducts;
+    } catch (error) {
+      throw new ForbiddenException('Failed to retrieve products');
+    }
+  }
+
+  async getProductBySearch(searchField: string) {
+    try {
+      const searchProduct = await this.prisma.product.findMany({
+        where: {
+          OR: [
+            { productName: { contains: searchField, mode: 'insensitive' } },
+            { description: { contains: searchField, mode: 'insensitive' } },
+          ],
+        },
+      });
+      return searchProduct;
+    } catch (error) {
+      throw new ForbiddenException('Failed to search products');
+    }
+  }
+
   async editProduct(dto: EditProductDto) {
     const { id, ...updatedData } = dto;
     const existingProduct = await this.prisma.product.findUnique({
