@@ -5,6 +5,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { ProductModule } from './product/product.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -13,7 +14,9 @@ import { ScheduleModule } from '@nestjs/schedule';
     UserModule,
     PrismaModule,
     ProductModule,
-    ScheduleModule.forRoot()
-  ]
+    ScheduleModule.forRoot(),
+    ReviewModule
+  ],
+  controllers: []
 })
 export class AppModule {}
