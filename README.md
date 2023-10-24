@@ -1,10 +1,14 @@
 ## Installation
 
 NPM Packages
+NPM Packages
+
 ```bash
 $ npm install
 ```
+
 PostgreSQL Docker Image
+
 ```bash
 $ docker compose up
 
