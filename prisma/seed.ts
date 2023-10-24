@@ -23,27 +23,31 @@ async function seed() {
       { email: 'user13@example.com', firstName: 'Jedi', lastName: 'Daikyo', studentId: '1242', hash: hash},
     ];
 
+    const imgEx = [
+      'https://cu-black-market-s3.s3-ap-southeast-1.amazonaws.com/IMG_9262.jpeg',
+      'IMG_9262.jpeg',
+    ];
     const products = [
-      { productName: 'Relx', description: '100 pcs, Mint', startPrice: 200, available: false, studentId: '1231', address: 'ise', expiryLength: 1000 },
+      { productName: 'Relx', description: '100 pcs, Mint', startPrice: 200, available: false, studentId: '1231', address: 'ise', expiryLength: 1000, image: imgEx },
       { productName: 'Gened Slot', description: 'Hist sci', startPrice: 400, available: true, studentId: '1237', address: 'inda', expiryLength: 600 },
       { productName: 'Canteen Table', description: 'At i-Canteen', startPrice: 1600, available: true, studentId: '1231', address: 'ise', expiryLength: 1000 },
-      { productName: 'Parking Slot', description: '3A Aksorn Building', startPrice: 1200, available: true, studentId: '1231', address: 'Aksorn', expiryLength: 500 },
+      { productName: 'Parking Slot', description: '3A Aksorn Building', startPrice: 1200, available: true, studentId: '1231', address: 'Aksorn', expiryLength: 500, image: imgEx },
       { productName: 'dfgdg', description: 'asdasdasd', startPrice: 300, available: true, studentId: '1231', address: 'bba', expiryLength: 900 },
-      { productName: 'Product 1', description: 'Description 1', startPrice: 560, available: true, studentId: '1232', address: 'eba', expiryLength: 700 },
-      { productName: 'Product 2', description: 'Description 2', startPrice: 9000, available: false, studentId: '1232', address: 'bba', expiryLength: 2000, buyerId: '1236' },
+      { productName: 'Product 1', description: 'Description 1', startPrice: 560, available: true, studentId: '1232', address: 'eba', expiryLength: 700, image: imgEx },
+      { productName: 'Product 2', description: 'Description 2', startPrice: 9000, available: false, studentId: '1232', address: 'bba', expiryLength: 2000, buyerId: '1236', image: imgEx },
       { productName: 'Product 3', description: 'Description 3', startPrice: 700, available: true, studentId: '1231', address: 'ise', expiryLength: 6000 },
-      { productName: 'Product 4', description: 'Description 4', startPrice: 5000, available: false, studentId: '1235', address: 'inda', expiryLength: 10000 },
+      { productName: 'Product 4', description: 'Description 4', startPrice: 5000, available: false, studentId: '1235', address: 'inda', expiryLength: 10000, image: imgEx },
       { productName: 'Product 5', description: 'Description 5', startPrice: 2500, available: true, studentId: '1234', address: 'balac', expiryLength: 1400 },
       { productName: 'Product 6', description: 'Description 6', startPrice: 1000, available: false, studentId: '1237', address: 'bascii', expiryLength: 1000, buyerId: '1234' },
-      { productName: 'Product 7', description: 'Description 7', startPrice: 1500, available: true, studentId: '1239', address: 'ise', expiryLength: 1200 },
+      { productName: 'Product 7', description: 'Description 7', startPrice: 1500, available: true, studentId: '1239', address: 'ise', expiryLength: 1200, image: imgEx },
       { productName: 'Product 8', description: 'Description 8', startPrice: 6450, available: true, studentId: '1241', address: 'bba', expiryLength: 2300 },
       { productName: 'Product 9', description: 'Description 9', startPrice: 2340, available: false, studentId: '1234', address: 'bba', expiryLength: 5400, buyerId: '1234' },
       { productName: 'Product 10', description: 'Description 10', startPrice: 1230, available: true, studentId: '1238', address: 'balac', expiryLength: 700 },
-      { productName: 'Product 11', description: 'Description 11', startPrice: 10000, available: false, studentId: '1235', address: 'eba', expiryLength: 5000 },
+      { productName: 'Product 11', description: 'Description 11', startPrice: 10000, available: false, studentId: '1235', address: 'eba', expiryLength: 5000, image: imgEx },
       { productName: 'Product 12', description: 'Description 12', startPrice: 500, available: true, studentId: '1232', address: 'bascii', expiryLength: 2100 },
       { productName: 'Product 13', description: 'Description 13', startPrice: 300, available: true, studentId: '1237', address: 'inda', expiryLength: 9000 },
       { productName: 'Product 14', description: 'Description 14', startPrice: 150, available: true, studentId: '1237', address: 'bba', expiryLength: 1000 },
-      { productName: 'Product 15', description: 'Description 15', startPrice: 200, available: false, studentId: '1238', address: 'ise', expiryLength: 1500, buyerId: '1237' },
+      { productName: 'Product 15', description: 'Description 15', startPrice: 200, available: false, studentId: '1238', address: 'ise', expiryLength: 1500, buyerId: '1237', image: imgEx },
     ];
 
     const reviews = [
