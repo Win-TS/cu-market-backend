@@ -82,7 +82,8 @@ export class ProductController {
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiOperation({
     summary: 'GET Products By Search Field through Query Parameter',
-    description: 'GET Products By Search Field through Query Parameters in Database',
+    description:
+      'GET Products By Search Field through Query Parameters in Database',
   })
   @Get('search')
   getProductBySearch(@Query('searchField') searchField: string) {
