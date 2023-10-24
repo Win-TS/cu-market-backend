@@ -38,6 +38,10 @@ export class AddProductDto {
     @ApiProperty()
     address: string;
 
+    @IsOptional()
+    @ApiProperty({ example: ["imageUrl", "imageKey"] })
+    image: string[];
+
 }
 
 export class EditProductDto extends AddProductDto {
