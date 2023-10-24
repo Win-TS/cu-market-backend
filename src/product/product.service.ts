@@ -12,7 +12,9 @@ import { AddProductDto, EditProductDto } from './dto';
 @Injectable()
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+  ) {}
 
   async addProduct(dto: AddProductDto) {
     const user = await this.prisma.user.findUnique({
@@ -31,6 +33,7 @@ export class ProductService {
           available: dto.available,
           address: dto.address,
           expiryLength: dto.expiryLength,
+          image: dto.image,
           user: { connect: { studentId: dto.studentId } },
         },
       });

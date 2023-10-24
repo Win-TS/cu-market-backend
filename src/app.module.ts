@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ProductModule } from './product/product.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ReviewModule } from './review/review.module';
+import { AwsModule } from './aws/aws.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { ReviewModule } from './review/review.module';
     PrismaModule,
     ProductModule,
     ScheduleModule.forRoot(),
-    ReviewModule
+    ReviewModule,
+    AwsModule
   ],
   controllers: []
 })

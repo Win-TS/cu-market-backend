@@ -1,15 +1,22 @@
 ## Installation
 
 NPM Packages
+NPM Packages
+
 ```bash
 $ npm install
 ```
+
 PostgreSQL Docker Image
+
 ```bash
 $ docker compose up
 
 # restart DB
 $ npm run db:dev:restart
+
+# run seed script for initial (dummy) data
+npx prisma db seed
 ```
 
 ## Running the app
