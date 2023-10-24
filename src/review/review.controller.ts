@@ -3,7 +3,7 @@ import { ReviewService } from './review.service';
 import { JwtGuard } from 'src/auth/guard';
 import { ApiTags, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AddReviewDto } from './dto/review.dto';
-import { Body, Post, Delete, Patch } from '@nestjs/common/decorators';
+import { Body, Post, Delete, Patch, Get } from '@nestjs/common/decorators';
 import { EditReviewDto } from './dto/review.dto';
 import { ReviewOutputResponse } from './dto/review.output';
 
@@ -51,5 +51,14 @@ export class ReviewController {
   @Delete('delete/:id')
   deleteReview(@Param('id') id: string) {
     return this.reviewService.deleteReview(Number(id));
+  }
+  @Get(':studentId')
+  getReviews(@Param('studentId') studentId: string) {
+    return this.reviewService.getReviewsBySellerId(studentId);
+  }
+
+  @Get('star/:studentId')
+  getAverageStar(@Param('studentId') studentId: string) {
+    return this.reviewService.getAverageStarBySellerId(studentId);
   }
 }

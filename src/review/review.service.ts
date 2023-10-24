@@ -9,6 +9,47 @@ import {
 @Injectable()
 export class ReviewService {
   constructor(private prisma: PrismaService) {}
+  async getReviewsBySellerId(sellerStudentId: string) {
+    try {
+      const reviews = await this.prisma.review.findMany({
+        where: {
+          product: {
+            user: {
+              studentId: sellerStudentId,
+            },
+          },
+        },
+      });
+      return reviews;
+    } catch (error) {
+      throw new ForbiddenException('Failed to retrieve reviews');
+    }
+  }
+
+  async getAverageStarBySellerId(sellerStudentId: string) {
+    try {
+      // Use Prisma aggregation to calculate the average star rating
+      const reviews = await this.prisma.review.findMany({
+        where: {
+          product: {
+            user: {
+              studentId: sellerStudentId,
+            },
+          },
+        },
+        select: {
+          star: true, // Select the star rating for aggregation
+        },
+      });
+
+      const totalStars = reviews.reduce((sum, review) => sum + review.star, 0);
+      const averageStar = totalStars / reviews.length;
+
+      return averageStar;
+    } catch (error) {
+      throw new ForbiddenException('Failed to retrieve average star rating');
+    }
+  }
 
   async addReview(dto: AddReviewDto) {
     const user = await this.prisma.user.findUnique({
