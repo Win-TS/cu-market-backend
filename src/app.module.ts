@@ -7,6 +7,7 @@ import { ProductModule } from './product/product.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ReviewModule } from './review/review.module';
 import { AwsModule } from './aws/aws.module';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { AwsModule } from './aws/aws.module';
     ProductModule,
     ScheduleModule.forRoot(),
     ReviewModule,
-    AwsModule
+    AwsModule,
+    SocketModule
   ],
   controllers: []
 })

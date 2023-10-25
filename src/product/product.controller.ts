@@ -13,7 +13,6 @@ import { ApiBody, ApiResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard';
 import {
   AddProductDto,
-  EditProductDto,
   ProductOutputResponse,
   LastMinBidProductResponse,
 } from './dto';
@@ -133,26 +132,6 @@ export class ProductController {
   @Post('add')
   addProduct(@Body() dto: AddProductDto) {
     return this.productService.addProduct(dto);
-  }
-
-  @ApiResponse({
-    status: 200,
-    description: 'Product Edited',
-    type: ProductOutputResponse,
-  })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiBody({
-    type: EditProductDto,
-    description: 'Edit Product Form JSON, Return as Product Data JSON',
-  })
-  @ApiOperation({
-    summary: 'Edit Product',
-    description: 'Edit Product in Database',
-  })
-  @Put('edit')
-  editProduct(@Body() dto: EditProductDto) {
-    return this.productService.editProduct(dto);
   }
 
   @ApiResponse({

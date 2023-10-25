@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { GetUser } from '../auth/decorator';
@@ -32,10 +32,10 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiOperation({ summary: 'PATCH Bought Item of User', description: 'PATCH Bought Item of User to Database through Product ID (id in Product table) and JWT used'})
-  @Patch('buy/:productId')
-  buyProduct(@GetUser('studentId') studentId: string, @Param('productId') productId: string) {
-    return this.userService.buyProduct(studentId, Number(productId));
+  @ApiOperation({ summary: 'PATCH Bought Item of User', description: 'PATCH Bought Item of User to Database through Product ID (id in Product table)'})
+  @Patch('buy')
+  buyProduct(@Query('studentId') studentId: string, @Query('productId') productId: string, @Query('endPrice') endPrice: string) {
+    return this.userService.buyProduct(studentId, Number(productId), Number(endPrice));
   }
 
 }

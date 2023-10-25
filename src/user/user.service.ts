@@ -11,7 +11,7 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
   constructor(private prisma: PrismaService) {}
 
-  async buyProduct(studentId: string, productId: number) {
+  async buyProduct(studentId: string, productId: number, endPrice: number) {
     const existingProduct = await this.prisma.product.findUnique({
       where: { id: productId },
     });
@@ -27,7 +27,6 @@ export class UserService {
       where: { id: productId },
       data: {
         available: false,
-        expiryLength: null,
         buyerId: studentId,
       },
     });

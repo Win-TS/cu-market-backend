@@ -11,14 +11,15 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  hash      String
-  studentId String   @unique
-  firstName String
-  lastName  String
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  email      String   @unique
+  hash       String
+  studentId  String   @unique
+  firstName  String
+  lastName   String
+  lightBulbs Int
 
   products       Product[]
   boughtProducts Product[] @relation("BuyerRelation")
@@ -28,18 +29,20 @@ model User {
 }
 
 model Product {
-  id           Int      @id @default(autoincrement())
-  studentId    String
-  productName  String
-  description  String
-  startPrice   Int
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  available    Boolean
-  expiryLength Int?
-  address      String
-  image        String[]
-  buyerId      String?
+  id          Int      @id @default(autoincrement())
+  studentId   String
+  productName String
+  description String
+  quantity    Int
+  startPrice  Int
+  endPrice    Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  available   Boolean
+  expiryTime  DateTime
+  address     String
+  image       String[]
+  buyerId     String?
 
   user    User     @relation(fields: [studentId], references: [studentId])
   buyer   User?    @relation("BuyerRelation", fields: [buyerId], references: [studentId])

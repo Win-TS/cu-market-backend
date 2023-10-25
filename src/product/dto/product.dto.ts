@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -24,9 +25,19 @@ export class AddProductDto {
   description: string;
 
   @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty()
+  quantity: number;
+
+  @IsNotEmpty()
   @IsInt()
   @ApiProperty()
   startPrice: number;
+
+  @IsOptional()
+  @IsInt()
+  @ApiProperty()
+  endPrice: number;
 
   @IsNotEmpty()
   @IsBoolean()
@@ -36,7 +47,7 @@ export class AddProductDto {
   @IsOptional()
   @IsInt()
   @ApiProperty()
-  expiryLength: number;
+  expiryTime: Date;
 
   @IsNotEmpty()
   @IsString()
@@ -46,11 +57,4 @@ export class AddProductDto {
   @IsOptional()
   @ApiProperty({ example: ['imageUrl', 'imageKey'] })
   image: string[];
-}
-
-export class EditProductDto extends AddProductDto {
-  @IsNotEmpty()
-  @IsInt()
-  @ApiProperty()
-  id: number;
 }

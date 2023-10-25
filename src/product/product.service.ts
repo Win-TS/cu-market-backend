@@ -7,14 +7,12 @@ import {
 import { Product } from '@prisma/client';
 import { Cron } from '@nestjs/schedule';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AddProductDto, EditProductDto } from './dto';
+import { AddProductDto } from './dto';
 
 @Injectable()
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
-  constructor(
-    private prisma: PrismaService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async addProduct(dto: AddProductDto) {
     const user = await this.prisma.user.findUnique({
@@ -30,9 +28,10 @@ export class ProductService {
           productName: dto.productName,
           description: dto.description,
           startPrice: dto.startPrice,
+          quantity: dto.quantity,
           available: dto.available,
           address: dto.address,
-          expiryLength: dto.expiryLength,
+          expiryTime: dto.expiryTime,
           image: dto.image,
           user: { connect: { studentId: dto.studentId } },
         },
@@ -128,8 +127,7 @@ export class ProductService {
       });
       const productsWithTimeRemaining = products.map((product) => {
         const currentTime = new Date();
-        const expiryTime = new Date(product.createdAt);
-        expiryTime.setSeconds(expiryTime.getSeconds() + product.expiryLength);
+        const expiryTime = product.expiryTime;
         const timeRemaining = expiryTime.getTime() - currentTime.getTime();
         return {
           ...product,
@@ -162,25 +160,6 @@ export class ProductService {
     }
   }
 
-  async editProduct(dto: EditProductDto) {
-    const { id, ...updatedData } = dto;
-    const existingProduct = await this.prisma.product.findUnique({
-      where: { id: id },
-    });
-    if (!existingProduct) {
-      throw new NotFoundException(`Product with ID ${id} not found`);
-    }
-    try {
-      const updatedProduct = await this.prisma.product.update({
-        where: { id: dto.id },
-        data: updatedData,
-      });
-      return updatedProduct;
-    } catch (error) {
-      throw new ForbiddenException('Failed to edit product');
-    }
-  }
-
   async deleteProduct(id: number) {
     const existingProduct = await this.prisma.product.findUnique({
       where: { id: id },
@@ -203,17 +182,13 @@ export class ProductService {
     this.logger.log('Cron Job Execute: Update Availability');
     const products: Product[] = await this.prisma.product.findMany();
     for (const product of products) {
-      if (product.expiryLength) {
-        if (product.available) {
-          const currentTime = new Date();
-          const expiryTime = new Date(product.createdAt);
-          expiryTime.setSeconds(expiryTime.getSeconds() + product.expiryLength);
-          if (currentTime > expiryTime) {
-            await this.prisma.product.update({
-              where: { id: product.id },
-              data: { available: false },
-            });
-          }
+      if (product.available) {
+        const currentTime = new Date();
+        if (currentTime > product.expiryTime) {
+          await this.prisma.product.update({
+            where: { id: product.id },
+            data: { available: false },
+          });
         }
       }
     }

@@ -37,6 +37,7 @@ export class AuthService {
           studentId: dto.studentId,
           firstName: dto.firstName,
           lastName: dto.lastName,
+          lightBulbs: 0,
         },
       });
       return this.signToken(user.id, user.studentId);
