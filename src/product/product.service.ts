@@ -55,7 +55,7 @@ export class ProductService {
     }
   }
 
-  async getAvailableProducts() {
+  async getAvailableProducts(limit: number) {
     try {
       const availableProducts = await this.prisma.product.findMany({
         where: {
@@ -64,6 +64,7 @@ export class ProductService {
         orderBy: {
           createdAt: 'desc',
         },
+        take: limit
       });
       return availableProducts;
     } catch (error) {
@@ -71,7 +72,7 @@ export class ProductService {
     }
   }
 
-  async getExpiredProducts() {
+  async getExpiredProducts(limit: number) {
     try {
       const expiredProducts = await this.prisma.product.findMany({
         where: {
@@ -80,6 +81,7 @@ export class ProductService {
         orderBy: {
           updatedAt: 'desc',
         },
+        take: limit
       });
       return expiredProducts;
     } catch (error) {
@@ -87,7 +89,7 @@ export class ProductService {
     }
   }
 
-  async getProductsById(studentId: string) {
+  async getProductsById(studentId: string, limit: number) {
     try {
       const products = await this.prisma.product.findMany({
         where: {
@@ -96,6 +98,7 @@ export class ProductService {
         orderBy: {
           updatedAt: 'desc',
         },
+        take: limit
       });
       return products;
     } catch (error) {
@@ -115,7 +118,7 @@ export class ProductService {
     }
   }
 
-  async getProductsNearExpiry() {
+  async getProductsNearExpiry(limit: number) {
     try {
       const products = await this.prisma.product.findMany({
         where: {
@@ -124,37 +127,43 @@ export class ProductService {
         orderBy: {
           createdAt: 'desc',
         },
+        take: limit,
       });
-      const productsWithTimeRemaining = products.map((product) => {
+      const sortedProducts = products.sort((a, b) => {
         const currentTime = new Date();
-        const expiryTime = product.expiryTime;
-        const timeRemaining = expiryTime.getTime() - currentTime.getTime();
-        return {
-          ...product,
-          timeRemaining,
-        };
+        const timeRemainingA = a.expiryTime.getTime() - currentTime.getTime();
+        const timeRemainingB = b.expiryTime.getTime() - currentTime.getTime();
+        return timeRemainingA - timeRemainingB;
       });
-
-      const sortedProducts = productsWithTimeRemaining.sort(
-        (a, b) => a.timeRemaining - b.timeRemaining,
-      );
       return sortedProducts;
     } catch (error) {
       throw new ForbiddenException('Failed to retrieve products');
     }
   }
 
-  async getProductBySearch(searchField: string) {
+  async getProductBySearch(searchField: string, limit: number) {
     try {
       const searchProduct = await this.prisma.product.findMany({
         where: {
-          OR: [
-            { productName: { contains: searchField, mode: 'insensitive' } },
-            { description: { contains: searchField, mode: 'insensitive' } },
+          AND: [
+            {
+              OR: [
+                { productName: { contains: searchField, mode: 'insensitive' } },
+                { description: { contains: searchField, mode: 'insensitive' } },
+              ],
+            },
+            { available: true },
           ],
         },
+        take: limit,
       });
-      return searchProduct;
+      const sortedProducts = searchProduct.sort((a, b) => {
+        const currentTime = new Date();
+        const timeRemainingA = a.expiryTime.getTime() - currentTime.getTime();
+        const timeRemainingB = b.expiryTime.getTime() - currentTime.getTime();
+        return timeRemainingA - timeRemainingB;
+      });
+      return sortedProducts;
     } catch (error) {
       throw new ForbiddenException('Failed to search products');
     }

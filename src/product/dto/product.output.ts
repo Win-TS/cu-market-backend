@@ -31,7 +31,7 @@ export class ProductOutputResponse {
   @ApiProperty()
   address: string;
 
-  @ApiProperty({ example: ['imageUrl', 'imageKey'] })
+  @ApiProperty({ example: [{ url: 'imageUrl1', key: 'imageKey1' }, { url: 'imageUrl2', key: 'imageKey2' }] })
   image: string[];
 
   @ApiProperty()

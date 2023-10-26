@@ -41,7 +41,7 @@ model Product {
   available   Boolean
   expiryTime  DateTime
   address     String
-  image       String[]
+  image       Json[]
   buyerId     String?
 
   user    User     @relation(fields: [studentId], references: [studentId])

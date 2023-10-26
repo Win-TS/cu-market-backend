@@ -34,18 +34,12 @@ export class AddProductDto {
   @ApiProperty()
   startPrice: number;
 
-  @IsOptional()
-  @IsInt()
-  @ApiProperty()
-  endPrice: number;
-
   @IsNotEmpty()
   @IsBoolean()
   @ApiProperty()
   available: boolean;
 
   @IsOptional()
-  @IsInt()
   @ApiProperty()
   expiryTime: Date;
 
@@ -55,6 +49,6 @@ export class AddProductDto {
   address: string;
 
   @IsOptional()
-  @ApiProperty({ example: ['imageUrl', 'imageKey'] })
-  image: string[];
+  @ApiProperty({ example: [{ url: 'imageUrl1', key: 'imageKey1' }, { url: 'imageUrl2', key: 'imageKey2' }] })
+  image: [];
 }

@@ -26,26 +26,38 @@ async function seed() {
     const now = new Date();
     const addHr = new Date(now.getTime() + 60 * 60 * 1000); 
     const imgEx = [
-      'https://cu-black-market-s3.s3-ap-southeast-1.amazonaws.com/IMG_9262.jpeg',
-      'IMG_9262.jpeg',
+      {
+        key: 'IMG_9262.jpeg',
+        url: 'https://cu-black-market-s3.s3-ap-southeast-1.amazonaws.com/IMG_9262.jpeg',
+      },
+      {
+        key: 'IMG_6278.jpeg',
+        url: 'https://cu-black-market-s3.s3.amazonaws.com/IMG_6278.jpeg',
+      },
+    ];
+    const imgEx1 = [
+      {
+        key: 'IMG_9262.jpeg',
+        url: 'https://cu-black-market-s3.s3-ap-southeast-1.amazonaws.com/IMG_9262.jpeg',
+      },
     ];
     const products = [
-      { productName: 'Relx', description: 'Mint', quantity: 100, startPrice: 200, available: false, studentId: '1231', address: 'ise', expiryTime: addHr, image: imgEx },
+      { productName: 'Relx', description: 'Mint', quantity: 100, startPrice: 200, available: false, studentId: '1231', address: 'ise', expiryTime: addHr, image: imgEx1 },
       { productName: 'Gened Slot', description: 'Hist sci', quantity: 1, startPrice: 400, available: true, studentId: '1237', address: 'inda', expiryTime: addHr },
       { productName: 'Canteen Table', description: 'At i-Canteen', quantity: 2, startPrice: 1600, available: true, studentId: '1231', address: 'ise', expiryTime: addHr },
-      { productName: 'Parking Slot', description: '3A Aksorn Building', quantity: 1, startPrice: 1200, available: true, studentId: '1231', address: 'Aksorn', expiryTime: now, image: imgEx },
+      { productName: 'Parking Slot', description: '3A Aksorn Building', quantity: 1, startPrice: 1200, available: true, studentId: '1231', address: 'Aksorn', expiryTime: now, image: imgEx1 },
       { productName: 'dfgdg', description: 'asdasdasd', startPrice: 300, quantity: 10, available: true, studentId: '1231', address: 'bba', expiryTime: addHr },
       { productName: 'Product 1', description: 'Description 1', startPrice: 560, quantity: 15, available: true, studentId: '1232', address: 'eba', expiryTime: addHr, image: imgEx },
       { productName: 'Product 2', description: 'Description 2', startPrice: 9000, quantity: 20, endPrice: 28000, available: false, studentId: '1232', address: 'bba', expiryTime: now, buyerId: '1236', image: imgEx },
       { productName: 'Product 3', description: 'Description 3', startPrice: 700, quantity:50, available: true, studentId: '1231', address: 'ise', expiryTime: addHr },
-      { productName: 'Product 4', description: 'Description 4', startPrice: 5000, quantity: 100, available: false, studentId: '1235', address: 'inda', expiryTime: now, image: imgEx },
+      { productName: 'Product 4', description: 'Description 4', startPrice: 5000, quantity: 100, available: false, studentId: '1235', address: 'inda', expiryTime: now, image: imgEx1 },
       { productName: 'Product 5', description: 'Description 5', startPrice: 2500, quantity: 10, available: true, studentId: '1234', address: 'balac', expiryTime: addHr },
-      { productName: 'Product 6', description: 'Description 6', startPrice: 1000, quantity: 1000, endPrice: 5500, available: false, studentId: '1237', address: 'bascii', expiryTime: now, buyerId: '1234' },
+      { productName: 'Product 6', description: 'Description 6', startPrice: 1000, quantity: 1000, endPrice: 5500, available: false, studentId: '1237', address: 'bascii', expiryTime: now, buyerId: '1238' },
       { productName: 'Product 7', description: 'Description 7', startPrice: 1500, quantity: 500, available: true, studentId: '1239', address: 'ise', expiryTime: addHr, image: imgEx },
       { productName: 'Product 8', description: 'Description 8', startPrice: 6450, quantity: 800, available: true, studentId: '1241', address: 'bba', expiryTime: addHr },
-      { productName: 'Product 9', description: 'Description 9', startPrice: 2340, quantity: 30, endPrice: 15000, available: false, studentId: '1234', address: 'bba', expiryTime: now, buyerId: '1234' },
+      { productName: 'Product 9', description: 'Description 9', startPrice: 2340, quantity: 30, endPrice: 15000, available: false, studentId: '1234', address: 'bba', expiryTime: now, buyerId: '1238' },
       { productName: 'Product 10', description: 'Description 10', startPrice: 1230, quantity: 25, available: true, studentId: '1238', address: 'balac', expiryTime: addHr },
-      { productName: 'Product 11', description: 'Description 11', startPrice: 10000, quantity: 19, available: false, studentId: '1235', address: 'eba', expiryTime: now, image: imgEx },
+      { productName: 'Product 11', description: 'Description 11', startPrice: 10000, quantity: 19, available: false, studentId: '1235', address: 'eba', expiryTime: now, image: imgEx1 },
       { productName: 'Product 12', description: 'Description 12', startPrice: 500, quantity: 56, available: true, studentId: '1232', address: 'bascii', expiryTime: addHr },
       { productName: 'Product 13', description: 'Description 13', startPrice: 300, quantity: 70, available: true, studentId: '1237', address: 'inda', expiryTime: addHr },
       { productName: 'Product 14', description: 'Description 14', startPrice: 150, quantity: 33, available: true, studentId: '1237', address: 'bba', expiryTime: addHr },

@@ -25,8 +25,8 @@ export class UserController {
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiOperation({ summary: 'GET Order History of User', description: 'GET Order History Info of User from Database through JWT used'})
   @Get('history')
-  orderHistory(@GetUser('studentId') studentId: string) {
-    return this.userService.orderHistory(studentId);
+  orderHistory(@GetUser('studentId') studentId: string, @Query('limit') limit?: string) {
+    return this.userService.orderHistory(studentId, limit ? Number(limit) : undefined);
   }
 
   @ApiResponse({ status: 200, description: 'OK' })

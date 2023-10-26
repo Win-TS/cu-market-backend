@@ -33,7 +33,7 @@ export class UserService {
     return boughtProduct;
   }
 
-  async orderHistory(studentId: string) {
+  async orderHistory(studentId: string, limit: number) {
     try {
       const boughtProducts = await this.prisma.product.findMany({
         where: {
@@ -42,6 +42,10 @@ export class UserService {
         orderBy: {
           updatedAt: 'desc',
         },
+        include: {
+          reviews: true,
+        },
+        take: limit,
       });
       return boughtProducts;
     } catch (error) {

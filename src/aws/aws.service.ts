@@ -16,8 +16,8 @@ export class AwsService {
     secretAccessKey = this.configService.get('AWS_S3_KEY_SECRET');
     s3 = new S3({
       accessKeyId: accessKeyId,
-      secretAccessKey: secretAccessKey
-    })
+      secretAccessKey: secretAccessKey,
+    });
   }
 
   async uploadFile(file) {
@@ -39,12 +39,12 @@ export class AwsService {
       ContentType: mimetype,
       ContentDisposition: 'inline',
       CreateBucketConfiguration: {
-      LocationConstraint: 'ap-southeast-1',
+        LocationConstraint: 'ap-southeast-1',
       },
     };
     try {
       let s3Response = await s3.upload(params).promise();
-      return [s3Response.Location, s3Response.Key];
+      return { url: s3Response.Location, key: s3Response.Key };
     } catch (error) {
       this.logger.error(error);
       throw new Error('File Upload Failed');
@@ -53,15 +53,16 @@ export class AwsService {
 
   async deleteFile(key: string) {
     try {
-      const deleteFile = await s3.deleteObject({
-        Bucket: bucketName,
-        Key: key
-      }).promise()
+      const deleteFile = await s3
+        .deleteObject({
+          Bucket: bucketName,
+          Key: key,
+        })
+        .promise();
       return `${key} deleted from bucket`;
     } catch (error) {
       this.logger.error(error);
       throw new Error('File Delete Failed');
     }
   }
-
 }

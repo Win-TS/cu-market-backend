@@ -44,8 +44,8 @@ export class ProductController {
     description: 'GET Available Products in Database',
   })
   @Get('available')
-  getAvailableProduct() {
-    return this.productService.getAvailableProducts();
+  getAvailableProduct(@Query('limit') limit?: string) {
+    return this.productService.getAvailableProducts(limit ? Number(limit) : undefined);
   }
 
   @ApiResponse({ status: 200, description: 'OK', type: ProductOutputResponse })
@@ -56,8 +56,8 @@ export class ProductController {
     description: 'GET Expired Products in Database',
   })
   @Get('expired')
-  getExpiredProduct() {
-    return this.productService.getExpiredProducts();
+  getExpiredProduct(@Query('limit') limit?: string) {
+    return this.productService.getExpiredProducts(limit ? Number(limit) : undefined);
   }
 
   @ApiResponse({
@@ -72,8 +72,8 @@ export class ProductController {
     description: 'GET Products Near Expiry from Database',
   })
   @Get('lastmin')
-  getProductsNearExpiry() {
-    return this.productService.getProductsNearExpiry();
+  getProductsNearExpiry(@Query('limit') limit?: string) {
+    return this.productService.getProductsNearExpiry(limit ? Number(limit) : undefined);
   }
 
   @ApiResponse({ status: 200, description: 'OK', type: ProductOutputResponse })
@@ -85,8 +85,8 @@ export class ProductController {
       'GET Products By Search Field through Query Parameters in Database',
   })
   @Get('search')
-  getProductBySearch(@Query('searchField') searchField: string) {
-    return this.productService.getProductBySearch(searchField);
+  getProductBySearch(@Query('searchField') searchField: string, @Query('limit') limit?: string) {
+    return this.productService.getProductBySearch(searchField, limit ? Number(limit) : undefined);
   }
 
   @ApiResponse({ status: 200, description: 'OK', type: ProductOutputResponse })
@@ -98,8 +98,8 @@ export class ProductController {
       'GET Products Listed by User with Student ID (Seller) from Database',
   })
   @Get(':studentId')
-  getProductsById(@Param('studentId') studentId: string) {
-    return this.productService.getProductsById(studentId);
+  getProductsById(@Param('studentId') studentId: string, @Query('limit') limit?: string) {
+    return this.productService.getProductsById(studentId, limit ? Number(limit) : undefined);
   }
 
   @ApiResponse({ status: 200, description: 'OK', type: ProductOutputResponse })

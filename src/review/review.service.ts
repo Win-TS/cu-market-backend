@@ -9,7 +9,7 @@ import {
 @Injectable()
 export class ReviewService {
   constructor(private prisma: PrismaService) {}
-  async getReviewsBySellerId(sellerStudentId: string) {
+  async getReviewsBySellerId(sellerStudentId: string, limit: number) {
     try {
       const reviews = await this.prisma.review.findMany({
         where: {
@@ -19,6 +19,7 @@ export class ReviewService {
             },
           },
         },
+        take: limit,
       });
       return reviews;
     } catch (error) {
@@ -28,7 +29,6 @@ export class ReviewService {
 
   async getAverageStarBySellerId(sellerStudentId: string) {
     try {
-      // Use Prisma aggregation to calculate the average star rating
       const reviews = await this.prisma.review.findMany({
         where: {
           product: {
@@ -38,7 +38,7 @@ export class ReviewService {
           },
         },
         select: {
-          star: true, // Select the star rating for aggregation
+          star: true,
         },
       });
 
