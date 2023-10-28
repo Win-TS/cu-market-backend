@@ -24,9 +24,9 @@ export class ProductOutputResponse {
 
   @ApiProperty()
   available: boolean;
-
+  
   @ApiProperty()
-  expiryLength: number;
+  expiryTime: Date;
 
   @ApiProperty()
   address: string;

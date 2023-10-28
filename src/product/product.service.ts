@@ -48,6 +48,9 @@ export class ProductService {
         orderBy: {
           createdAt: 'desc',
         },
+        include: {
+          reviews: true,
+        },
       });
       return products;
     } catch (error) {
@@ -81,7 +84,7 @@ export class ProductService {
         orderBy: {
           updatedAt: 'desc',
         },
-        take: limit
+        take: limit,
       });
       return expiredProducts;
     } catch (error) {
@@ -98,7 +101,10 @@ export class ProductService {
         orderBy: {
           updatedAt: 'desc',
         },
-        take: limit
+        take: limit,
+        include: {
+          reviews: true,
+        },
       });
       return products;
     } catch (error) {
