@@ -85,6 +85,9 @@ export class ProductService {
           updatedAt: 'desc',
         },
         take: limit,
+        include: {
+          reviews: true,
+        },
       });
       return expiredProducts;
     } catch (error) {
@@ -116,6 +119,9 @@ export class ProductService {
     try {
       const product = await this.prisma.product.findUnique({
         where: { id: id },
+        include: {
+          reviews: true,
+        },
       });
       console.log(product);
       return product;
