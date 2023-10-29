@@ -1,22 +1,20 @@
-import { AnySoaRecord } from "dns"
-
 export class NewChatDto {
     // use chat-${productId}
     room: any
-    sellerId: String
-    bidderId: String
+    sellerId: string
+    bidderId: string
     // For client socket id: [sellerSocketId, bidderSocketId]
-    socketIds: String[]
+    socketIds: string[]
     chatHistory: Object[]
 }
 
 export class JoinChatDto {
     room: any
-    bidderId: String
+    bidderId: string
 }
 
 export class MessageDto {
     room: any
-    senderId: String
-    message: String
+    senderId: string
+    message: string
 }

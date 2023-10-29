@@ -10,37 +10,53 @@ import {
 import Redis from 'ioredis';
 import { Server, Socket } from 'socket.io';
 import { BidProductDto, NewProductDto } from './dto/auction.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @WebSocketGateway({ namespace: '/auction' })
 export class AuctionGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   private redisClient: Redis;
-  constructor() {
+  constructor(private prisma: PrismaService) {
     this.redisClient = new Redis();
-    this.checkExpiredRooms();
   }
 
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('AuctionGateway');
 
   // unfinished
-  private async checkExpiredRooms() {
-    // Check for expired rooms every minute (adjust the interval as needed)
-    setInterval(async () => {
-      const currentTimestamp = Date.now();
-      const expiredRooms = await this.redisClient.zrangebyscore('expiryTimes', '-inf', currentTimestamp);
-
-      // Process each expired room
-      for (const room of expiredRooms) {
-        // Emit "end of bidding" event to clients in the room
-        this.server.to(room).emit('endOfBidding');
-
-        // Delete room and its payload from Redis
-        await this.redisClient.del(room);
-        await this.redisClient.zrem('expiryTimes', room);
+  @SubscribeMessage('bidEnd')
+  private async bidEnd(client: Socket, room: string) {
+    const payloadString = await this.redisClient.get(room);
+    if (payloadString) {
+      const payload: NewProductDto = JSON.parse(payloadString);
+      await this.prisma.product.update({
+        where: { id: Number(room.slice(4)) },
+        data: {
+          available: false,
+          endPrice: payload.currentPrice,
+          buyerId: payload.currentBidder,
+        },
+      });
+      for (let i = 1; i++; i < payload.bidHistory.length) {
+        await this.prisma.user.update({
+          where: { studentId: payload.bidHistory[i].studentId },
+          data: { lightBulbs: { increment: payload.bidHistory[i].bidPrice } },
+        });
       }
-    }, 60000); // 1 minute interval
+      return client.emit('bidEnded', payload);
+    }
+  }
+
+  @SubscribeMessage('enterRoom')
+  public async enterRoom(client: Socket, room: string) {
+    const payloadString = await this.redisClient.get(room);
+    if (payloadString) {
+      const payload: NewProductDto = JSON.parse(payloadString);
+      return client.emit('biddingData', payload);
+    } else {
+      return client.emit('productNotExist', null);
+    }
   }
 
   @SubscribeMessage('newProduct')
@@ -83,6 +99,15 @@ export class AuctionGateway
         studentId: payload.bidderId,
         bidPrice: payload.bidPrice,
       });
+      const deductLightBulb = await this.prisma.user.update({
+        where: { studentId: payload.bidderId },
+        data: {
+          lightBulbs: {
+            decrement: payload.bidPrice,
+          },
+        },
+      });
+      this.logger.log(deductLightBulb);
       await this.redisClient.set(
         payload.room,
         JSON.stringify(updatedProductPayload),
@@ -97,11 +122,11 @@ export class AuctionGateway
   public async deleteProduct(client: Socket, room: string) {
     const productPayload = await this.redisClient.get(room);
     if (productPayload) {
-        await this.redisClient.del(room);
-        this.logger.debug(`${room} deleted`);
+      await this.redisClient.del(room);
+      this.logger.debug(`${room} deleted`);
     }
     this.server.in('/auction').in(room).socketsLeave(room);
-    this.server.to(room).emit('productCancelled', room)
+    this.server.to(room).emit('productCancelled', room);
   }
 
   public afterInit(server: Server): void {

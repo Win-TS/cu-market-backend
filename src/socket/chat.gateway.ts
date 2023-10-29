@@ -10,15 +10,16 @@ import {
 import Redis from 'ioredis';
 import { Server, Socket } from 'socket.io';
 import { JoinChatDto, MessageDto, NewChatDto } from './dto/chat.dto';
+import { ChatService } from 'src/chat/chat.service';
 
-@WebSocketGateway({ namespace: '/chat' })
+@WebSocketGateway({ namespace: '/chatSocket', cors: true })
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+{  
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChatGateway');
   private redisClient: Redis;
-  constructor() {
+  constructor(private chatService: ChatService) {
     this.redisClient = new Redis();
   }
 
@@ -58,18 +59,29 @@ export class ChatGateway
   @SubscribeMessage('sendMessage')
   public async handleMessage(client: Socket, payload: MessageDto) {
     const payloadString = await this.redisClient.get(payload.room);
-    let reciever;
+    let reciever: string;
     if (payloadString) {
       const chatPayload: NewChatDto = JSON.parse(payloadString);
-      if (chatPayload.bidderId === payload.senderId || chatPayload.sellerId === payload.senderId) {
+      if (
+        chatPayload.bidderId === payload.senderId ||
+        chatPayload.sellerId === payload.senderId
+      ) {
         if (chatPayload.sellerId === payload.senderId) {
           reciever = chatPayload.socketIds[1];
         } else {
           reciever = chatPayload.socketIds[0];
         }
-        chatPayload.chatHistory.push({ senderId: payload.senderId, msg: payload.message })
+        chatPayload.chatHistory.push({
+          senderId: payload.senderId,
+          msg: payload.message,
+        });
         await this.redisClient.set(payload.room, JSON.stringify(chatPayload));
-        return client.to(reciever).emit('messageReceived', payload)
+        await this.chatService.createMessage({
+          senderId: payload.senderId,
+          receiverId: reciever,
+          message: payload.message,
+        });
+        return client.to(reciever).emit('messageReceived', payload);
       }
     }
   }

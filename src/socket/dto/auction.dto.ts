@@ -1,3 +1,8 @@
+interface BidHistoryItem {
+    studentId: string;
+    bidPrice: number;
+  }
+
 export class NewProductDto {
     
     // use bid-${productId}
@@ -15,7 +20,7 @@ export class NewProductDto {
     //expiryTime: Date
 
     // [{studentId: bidder1, bidPrice: bidPrice1}, {studentId: bidder2, bidPrice: bidPrice2}, ...] newest bid at index 0
-    bidHistory: []
+    bidHistory: BidHistoryItem[]
 
 }
 

@@ -8,6 +8,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ReviewModule } from './review/review.module';
 import { AwsModule } from './aws/aws.module';
 import { SocketModule } from './socket/socket.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { SocketModule } from './socket/socket.module';
     ScheduleModule.forRoot(),
     ReviewModule,
     AwsModule,
-    SocketModule
+    SocketModule,
+    ChatModule,
   ],
   controllers: []
 })
