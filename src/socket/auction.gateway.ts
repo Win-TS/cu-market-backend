@@ -98,6 +98,7 @@ export class AuctionGateway
       updatedProductPayload.bidHistory.unshift({
         studentId: payload.bidderId,
         bidPrice: payload.bidPrice,
+        BidTime: payload.time,
       });
       const deductLightBulb = await this.prisma.user.update({
         where: { studentId: payload.bidderId },

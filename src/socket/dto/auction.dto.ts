@@ -1,6 +1,7 @@
 interface BidHistoryItem {
     studentId: string;
     bidPrice: number;
+    bidTime: Date;
   }
 
 export class NewProductDto {
@@ -28,4 +29,5 @@ export class BidProductDto {
     room: any
     bidderId: string
     bidPrice: number
+    time: Date
 }
