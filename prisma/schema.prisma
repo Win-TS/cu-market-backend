@@ -11,15 +11,17 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  email      String   @unique
-  hash       String
-  studentId  String   @unique
-  firstName  String
-  lastName   String
-  lightBulbs Int
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  email        String   @unique
+  hash         String
+  studentId    String   @unique
+  firstName    String
+  lastName     String
+  lightBulbs   Int?
+  paotungId    String?
+  paotungToken String?
 
   products       Product[]
   boughtProducts Product[] @relation("BuyerRelation")

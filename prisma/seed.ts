@@ -21,6 +21,7 @@ async function seed() {
       { email: 'user11@example.com', firstName: 'Kao', lastName: 'Skywalkert', studentId: '1240', hash: hash, lightBulbs: 4000 },
       { email: 'user12@example.com', firstName: 'Pung', lastName: 'Tassanai55555', studentId: '1241', hash: hash, lightBulbs: 7500 },
       { email: 'user13@example.com', firstName: 'Jedi', lastName: 'Daikyo', studentId: '1242', hash: hash, lightBulbs: 20 },
+      { email: 'satorugojo@jjk.com', firstName: 'Satoru', lastName: 'Gojo', studentId: '9999', hash: await bcrypt.hash("infinity1234", salt) },
     ];
 
     const now = new Date();

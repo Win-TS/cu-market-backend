@@ -4,6 +4,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+import axios from 'axios';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -53,11 +54,30 @@ export class UserService {
     }
   }
 
-  async updateLightBulbs(studentId: string, lightBulbs: number) {
+  async updateLightBulbs(studentId: string, paotungToken: string) {
     try {
+      const response: {
+        data: {
+          user: {
+            id: string;
+            email: string;
+            firstName: string;
+            familyName: string;
+            money: number;
+          };
+        };
+      } = await axios.get('https://paotooong.thinc.in.th/v1/auth/me', {
+        headers: {
+          Authorization: `Bearer ${paotungToken}`,
+        },
+      });
       const student = await this.prisma.user.update({
         where: { studentId: studentId },
-        data: { lightBulbs: lightBulbs },
+        data: {
+          paotungToken: paotungToken,
+          paotungId: response.data.user.id,
+          lightBulbs: response.data.user.money,
+        },
       });
       return student;
     } catch (error) {
