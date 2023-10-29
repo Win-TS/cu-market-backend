@@ -52,4 +52,16 @@ export class UserService {
       throw new ForbiddenException('Failed to retrieve products');
     }
   }
+
+  async updateLightBulbs(studentId: string, lightBulbs: number) {
+    try {
+      const student = await this.prisma.user.update({
+        where: { studentId: studentId },
+        data: { lightBulbs: lightBulbs },
+      });
+      return student;
+    } catch (error) {
+      throw new ForbiddenException('Failed to retrieve products');
+    }
+  }
 }

@@ -38,4 +38,13 @@ export class UserController {
     return this.userService.buyProduct(studentId, Number(productId), Number(endPrice));
   }
 
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiOperation({ summary: 'PATCH Lightbulbs Amount of User', description: 'PATCH Lightbulbs Amount of User to Database'})
+  @Patch('updateLightBulb')
+  updateLightBulbs(@Query('studentId') studentId: string, @Query('lightBulbs') lightBulbs: string) {
+    return this.userService.updateLightBulbs(studentId, Number(lightBulbs));
+  }
+
 }
