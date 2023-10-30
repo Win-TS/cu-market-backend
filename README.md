@@ -1,19 +1,19 @@
 ## Installation
 
 NPM Packages
-NPM Packages
 
 ```bash
 $ npm install
 ```
 
-PostgreSQL Docker Image
+PostgreSQL and Redis Docker Image
 
 ```bash
 $ docker compose up
 
-# restart DB
+# restart PostgreSQL DB
 $ npm run db:dev:restart
+$ npx prisma migrate dev
 
 # run seed script for initial (dummy) data
 npx prisma db seed
@@ -30,6 +30,9 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+
+# swagger documentation
+$ http://localhost:4000/api
 ```
 
 ## Test
