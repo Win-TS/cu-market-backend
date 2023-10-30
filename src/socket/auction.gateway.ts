@@ -37,12 +37,6 @@ export class AuctionGateway
           buyerId: payload.currentBidder,
         },
       });
-      for (let i = 1; i++; i < payload.bidHistory.length) {
-        await this.prisma.user.update({
-          where: { studentId: payload.bidHistory[i].studentId },
-          data: { lightBulbs: { increment: payload.bidHistory[i].bidPrice } },
-        });
-      }
       return client.emit('bidEnded', payload);
     } else {
       return client.emit('productNotExist', null);
@@ -97,7 +91,6 @@ export class AuctionGateway
     if (productPayload) {
       const updatedProductPayload = JSON.parse(productPayload);
       if (payload.bidPrice > bidder.lightBulbs) {
-        console.log('not enough');
         return this.server.to(client.id).emit('notEnoughLightBulbs', payload);
       }
       updatedProductPayload.currentBidder = payload.bidderId;
@@ -107,7 +100,7 @@ export class AuctionGateway
         bidPrice: payload.bidPrice,
         BidTime: payload.time,
       });
-      const deductLightBulb = await this.prisma.user.update({
+      await this.prisma.user.update({
         where: { studentId: payload.bidderId },
         data: {
           lightBulbs: {
@@ -115,7 +108,14 @@ export class AuctionGateway
           },
         },
       });
-      this.logger.log(deductLightBulb);
+      await this.prisma.user.update({
+        where: { studentId: updatedProductPayload.bidHistory[1].studentId },
+        data: {
+          lightBulbs: {
+            increment: updatedProductPayload.bidHistory[1].bidPrice,
+          },
+        },
+      })
       await this.redisClient.set(
         payload.room,
         JSON.stringify(updatedProductPayload),
