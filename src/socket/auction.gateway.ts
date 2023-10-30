@@ -151,16 +151,17 @@ export class AuctionGateway
           (bid: any) => bid.studentId === studentId,
         );
         if (studentBidIndex !== -1) {
-          const roomInfo = {
-            room: roomKey,
-            sellerStudentId: roomPayload.sellerStudentId,
-            startPrice: roomPayload.startPrice,
-            currentBidder: roomPayload.currentBidder,
-            currentPrice: roomPayload.currentPrice,
-            bidHistory: roomPayload.bidHistory,
-          };
-          roomsWithBids.push(roomInfo);
-        }
+          const roomInfo = await this.prisma.product.findUnique({
+            where: { id: Number(roomPayload.room.substring(4)) },
+        });
+        if (roomInfo) {
+            const roomInfoNew = {
+                ...roomInfo,
+                currentBidder: roomPayload.currentBidder,
+                currentPrice: roomPayload.currentPrice,
+            };
+            roomsWithBids.push(roomInfoNew);
+        }}
       }
     }
     client.emit('roomsWithBids', roomsWithBids);
