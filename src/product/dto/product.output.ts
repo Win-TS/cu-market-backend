@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Review } from '@prisma/client';
 
 export class ProductOutputResponse {
   @ApiProperty()
@@ -31,7 +32,12 @@ export class ProductOutputResponse {
   @ApiProperty()
   address: string;
 
-  @ApiProperty({ example: [{ url: 'imageUrl1', key: 'imageKey1' }, { url: 'imageUrl2', key: 'imageKey2' }] })
+  @ApiProperty({
+    example: [
+      { url: 'imageUrl1', key: 'imageKey1' },
+      { url: 'imageUrl2', key: 'imageKey2' },
+    ],
+  })
   image: string[];
 
   @ApiProperty()
@@ -43,6 +49,12 @@ export class LastMinBidProductResponse extends ProductOutputResponse {
   timeRemaining: number;
 }
 
-// export class ProductDetailsOutputResponse extends ProductOutputResponse {
-//     @ApiProperty
-// }
+export class ProductDetailsOutputResponse extends ProductOutputResponse {
+  @ApiProperty()
+  user: {
+    paotungId: string;
+  };
+
+  @ApiProperty()
+  reviews: Review;
+}

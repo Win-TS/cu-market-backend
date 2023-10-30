@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function seed() {
   try {
     const salt = await bcrypt.genSalt();
-    const hash = await bcrypt.hash("pass", salt);
+    const hash = await bcrypt.hash("password", salt);
     const users = [
       { email: 'user1@example.com', firstName: 'Oat', lastName: 'Pitchy', studentId: '1230', hash: hash, lightBulbs: 500 },
       { email: 'user2@example.com', firstName: 'Dune', lastName: 'PW', studentId: '1231', hash: hash, lightBulbs: 0 },
@@ -21,7 +21,7 @@ async function seed() {
       { email: 'user11@example.com', firstName: 'Kao', lastName: 'Skywalkert', studentId: '1240', hash: hash, lightBulbs: 4000 },
       { email: 'user12@example.com', firstName: 'Pung', lastName: 'Tassanai55555', studentId: '1241', hash: hash, lightBulbs: 7500 },
       { email: 'user13@example.com', firstName: 'Jedi', lastName: 'Daikyo', studentId: '1242', hash: hash, lightBulbs: 20 },
-      { email: 'satorugojo@jjk.com', firstName: 'Satoru', lastName: 'Gojo', studentId: '9999', hash: await bcrypt.hash("infinity1234", salt) },
+      { email: '9999@gmail.com', firstName: '9999', lastName: '9999', studentId: '9999', hash: hash },
     ];
 
     const now = new Date();
@@ -72,6 +72,30 @@ async function seed() {
         { productId: 20, reviewerId: '1237', star: 3, reviewDescription: 'Decent'}
     ]
 
+    const chats = [
+      {
+        chatId: '1230x1234',
+        senderId: '1230',
+        receiverId: '1234',
+        message: 'Hi',
+        createdAt: now,
+      },
+      {
+        chatId: '1230x1234',
+        senderId: '1234',
+        receiverId: '1230',
+        message: 'Hello',
+        createdAt: now,
+      },
+      {
+        chatId: '1230x1234',
+        senderId: '1234',
+        receiverId: '1230',
+        message: 'How much',
+        createdAt: now,
+      },
+    ];
+
     for (const userData of users) {
       await prisma.user.create({
         data: userData,
@@ -87,6 +111,12 @@ async function seed() {
     for (const reviewData of reviews) {
       await prisma.review.create({
         data: reviewData,
+      });
+    }
+
+    for (const chatdata of chats) {
+      await prisma.chat.create({
+        data: chatdata,
       });
     }
 

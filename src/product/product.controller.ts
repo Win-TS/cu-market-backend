@@ -5,7 +5,6 @@ import {
   Get,
   Param,
   Post,
-  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -15,6 +14,7 @@ import {
   AddProductDto,
   ProductOutputResponse,
   LastMinBidProductResponse,
+  ProductDetailsOutputResponse,
 } from './dto';
 import { ProductService } from './product.service';
 
@@ -45,7 +45,9 @@ export class ProductController {
   })
   @Get('available')
   getAvailableProduct(@Query('limit') limit?: string) {
-    return this.productService.getAvailableProducts(limit ? Number(limit) : undefined);
+    return this.productService.getAvailableProducts(
+      limit ? Number(limit) : undefined,
+    );
   }
 
   @ApiResponse({ status: 200, description: 'OK', type: ProductOutputResponse })
@@ -57,7 +59,9 @@ export class ProductController {
   })
   @Get('expired')
   getExpiredProduct(@Query('limit') limit?: string) {
-    return this.productService.getExpiredProducts(limit ? Number(limit) : undefined);
+    return this.productService.getExpiredProducts(
+      limit ? Number(limit) : undefined,
+    );
   }
 
   @ApiResponse({
@@ -73,7 +77,9 @@ export class ProductController {
   })
   @Get('lastmin')
   getProductsNearExpiry(@Query('limit') limit?: string) {
-    return this.productService.getProductsNearExpiry(limit ? Number(limit) : undefined);
+    return this.productService.getProductsNearExpiry(
+      limit ? Number(limit) : undefined,
+    );
   }
 
   @ApiResponse({ status: 200, description: 'OK', type: ProductOutputResponse })
@@ -85,8 +91,14 @@ export class ProductController {
       'GET Products By Search Field through Query Parameters in Database',
   })
   @Get('search')
-  getProductBySearch(@Query('searchField') searchField: string, @Query('limit') limit?: string) {
-    return this.productService.getProductBySearch(searchField, limit ? Number(limit) : undefined);
+  getProductBySearch(
+    @Query('searchField') searchField: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.productService.getProductBySearch(
+      searchField,
+      limit ? Number(limit) : undefined,
+    );
   }
 
   @ApiResponse({ status: 200, description: 'OK', type: ProductOutputResponse })
@@ -98,11 +110,21 @@ export class ProductController {
       'GET Products Listed by User with Student ID (Seller) from Database',
   })
   @Get(':studentId')
-  getProductsById(@Param('studentId') studentId: string, @Query('limit') limit?: string) {
-    return this.productService.getProductsById(studentId, limit ? Number(limit) : undefined);
+  getProductsById(
+    @Param('studentId') studentId: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.productService.getProductsById(
+      studentId,
+      limit ? Number(limit) : undefined,
+    );
   }
 
-  @ApiResponse({ status: 200, description: 'OK', type: ProductOutputResponse })
+  @ApiResponse({
+    status: 200,
+    description: 'OK',
+    type: ProductDetailsOutputResponse,
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiOperation({
