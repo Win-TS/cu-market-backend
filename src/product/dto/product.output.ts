@@ -24,7 +24,7 @@ export class ProductOutputResponse {
 
   @ApiProperty()
   available: boolean;
-  
+
   @ApiProperty()
   expiryTime: Date;
 
@@ -42,3 +42,7 @@ export class LastMinBidProductResponse extends ProductOutputResponse {
   @ApiProperty()
   timeRemaining: number;
 }
+
+// export class ProductDetailsOutputResponse extends ProductOutputResponse {
+//     @ApiProperty
+// }

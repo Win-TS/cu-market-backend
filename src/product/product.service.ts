@@ -67,7 +67,7 @@ export class ProductService {
         orderBy: {
           createdAt: 'desc',
         },
-        take: limit
+        take: limit,
       });
       return availableProducts;
     } catch (error) {
@@ -120,6 +120,7 @@ export class ProductService {
       const product = await this.prisma.product.findUnique({
         where: { id: id },
         include: {
+          user: { select: { paotungId: true } },
           reviews: true,
         },
       });
