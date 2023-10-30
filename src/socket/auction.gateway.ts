@@ -46,6 +46,7 @@ export class AuctionGateway
   @SubscribeMessage('enterRoom')
   public async enterRoom(client: Socket, room: string) {
     const payloadString = await this.redisClient.get(room);
+    client.join(room);
     if (payloadString) {
       const payload: NewProductDto = JSON.parse(payloadString);
       return client.emit('biddingData', payload);
@@ -108,14 +109,16 @@ export class AuctionGateway
           },
         },
       });
-      await this.prisma.user.update({
-        where: { studentId: updatedProductPayload.bidHistory[1].studentId },
-        data: {
-          lightBulbs: {
-            increment: updatedProductPayload.bidHistory[1].bidPrice,
+      if (updatedProductPayload.bidHistory[1]) {
+        await this.prisma.user.update({
+          where: { studentId: updatedProductPayload.bidHistory[1].studentId },
+          data: {
+            lightBulbs: {
+              increment: updatedProductPayload.bidHistory[1].bidPrice,
+            },
           },
-        },
-      })
+        });
+      }
       await this.redisClient.set(
         payload.room,
         JSON.stringify(updatedProductPayload),
@@ -153,15 +156,16 @@ export class AuctionGateway
         if (studentBidIndex !== -1) {
           const roomInfo = await this.prisma.product.findUnique({
             where: { id: Number(roomPayload.room.substring(4)) },
-        });
-        if (roomInfo) {
+          });
+          if (roomInfo) {
             const roomInfoNew = {
-                ...roomInfo,
-                currentBidder: roomPayload.currentBidder,
-                currentPrice: roomPayload.currentPrice,
+              ...roomInfo,
+              currentBidder: roomPayload.currentBidder,
+              currentPrice: roomPayload.currentPrice,
             };
             roomsWithBids.push(roomInfoNew);
-        }}
+          }
+        }
       }
     }
     client.emit('roomsWithBids', roomsWithBids);
