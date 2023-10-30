@@ -24,7 +24,6 @@ export class AuctionGateway
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('AuctionGateway');
 
-  // unfinished
   @SubscribeMessage('bidEnd')
   private async bidEnd(client: Socket, room: string) {
     const payloadString = await this.redisClient.get(room);
@@ -45,6 +44,8 @@ export class AuctionGateway
         });
       }
       return client.emit('bidEnded', payload);
+    } else {
+      return client.emit('productNotExist', null);
     }
   }
 
@@ -89,10 +90,16 @@ export class AuctionGateway
   @SubscribeMessage('newBid')
   public async newBid(client: Socket, payload: BidProductDto) {
     this.logger.debug(payload);
-    client.join(payload.room);
     const productPayload = await this.redisClient.get(payload.room);
+    const bidder = await this.prisma.user.findUnique({
+      where: { studentId: payload.bidderId },
+    });
     if (productPayload) {
       const updatedProductPayload = JSON.parse(productPayload);
+      if (payload.bidPrice > bidder.lightBulbs) {
+        console.log('not enough');
+        return this.server.to(client.id).emit('notEnoughLightBulbs', payload);
+      }
       updatedProductPayload.currentBidder = payload.bidderId;
       updatedProductPayload.currentPrice = payload.bidPrice;
       updatedProductPayload.bidHistory.unshift({
@@ -113,7 +120,7 @@ export class AuctionGateway
         payload.room,
         JSON.stringify(updatedProductPayload),
       );
-      this.server
+      return this.server
         .to(payload.room)
         .emit('newBidReceived', updatedProductPayload);
     }
@@ -128,6 +135,35 @@ export class AuctionGateway
     }
     this.server.in('/auction').in(room).socketsLeave(room);
     this.server.to(room).emit('productCancelled', room);
+  }
+
+  @SubscribeMessage('checkInProgress')
+  public async checkProgress(client: Socket, studentId: string) {
+    const activeRoomsKeys = await (
+      await this.redisClient.keys('*')
+    ).filter((roomKey) => roomKey.startsWith('bid-'));
+    const roomsWithBids: any[] = [];
+    for (const roomKey of activeRoomsKeys) {
+      const roomPayloadString = await this.redisClient.get(roomKey);
+      if (roomPayloadString) {
+        const roomPayload: any = JSON.parse(roomPayloadString);
+        const studentBidIndex = roomPayload.bidHistory.findIndex(
+          (bid: any) => bid.studentId === studentId,
+        );
+        if (studentBidIndex !== -1) {
+          const roomInfo = {
+            room: roomKey,
+            sellerStudentId: roomPayload.sellerStudentId,
+            startPrice: roomPayload.startPrice,
+            currentBidder: roomPayload.currentBidder,
+            currentPrice: roomPayload.currentPrice,
+            bidHistory: roomPayload.bidHistory,
+          };
+          roomsWithBids.push(roomInfo);
+        }
+      }
+    }
+    client.emit('roomsWithBids', roomsWithBids);
   }
 
   public afterInit(server: Server): void {
